@@ -1,11 +1,13 @@
 import "./style.scss";
 import { shipFactory } from "./factories/shipFactory";
+import { player } from "./factories/playerFactory";
 
 function component() {
 	const el = document.createElement("div");
-	el.innerHTML = "hello Worlddd";
-	let ship1 = shipFactory("my first battleship");
-	ship1.printParam();
+	el.innerHTML = "hello World";
+
+	let ship1 = shipFactory(4);
+	let player1 = player(["a", "b"], "player-A");
 
 	return el;
 }
