@@ -18,6 +18,7 @@ function component() {
 	board.placeShip(ship1, position(3, 6), DIRECTION_HORIZONTAL);
 	board.placeShip(ship2, position(5, 5), DIRECTION_VERTICAL);
 	board.placeShip(ship3, position(8, 4), DIRECTION_HORIZONTAL);
+	console.log(board.getCells());
 	console.log(board);
 
 	return el;
