@@ -1,0 +1,4 @@
+const DIRECTION_HORIZONTAL = "horizontal";
+const DIRECTION_VERTICAL = "vertical";
+
+export { DIRECTION_HORIZONTAL, DIRECTION_VERTICAL };
