@@ -1,7 +1,6 @@
 import "./style.scss";
 import { shipFactory } from "./factories/shipFactory";
 import { gameBoardFactory } from "./factories/gameBoardFactory";
-import { player } from "./factories/playerFactory";
 import { position } from "./factories/position";
 import { DIRECTION_HORIZONTAL, DIRECTION_VERTICAL, GAME_DIMENSION } from "./constants/constants";
 
@@ -16,8 +15,8 @@ function component() {
 	let board = gameBoardFactory();
 	board.createBoard(GAME_DIMENSION);
 	board.placeShip(ship1, position(3, 6), DIRECTION_HORIZONTAL);
-	board.placeShip(ship2, position(5, 5), DIRECTION_VERTICAL);
 	board.placeShip(ship3, position(8, 4), DIRECTION_HORIZONTAL);
+	board.placeShip(ship2, position(5, 5), DIRECTION_VERTICAL);
 	console.log(board.getCells());
 	console.log(board);
 

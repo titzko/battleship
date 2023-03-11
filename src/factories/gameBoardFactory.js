@@ -21,22 +21,12 @@ const gameBoardFactory = () => {
 	};
 
 	const isValidHorizontalPlacement = (ship, position) => {
-		let unused = true;
-		for (let i = 0; i < ship.length; i++) {
-			if (cells[position.y][position.x + i] != null) {
-				unused = false;
-			}
-		}
+		const unused = Array.from({ length: ship.length }).every((_, i) => cells[position.y][position.x + i] === null);
 		return position.x + ship.length <= GAME_DIMENSION && unused;
 	};
 
 	const isValidVerticalPlacement = (ship, position) => {
-		let unused = true;
-		for (let i = 0; i < ship.length; i++) {
-			if (cells[position.y + i][position.x] != null) {
-				unused = false;
-			}
-		}
+		const unused = Array.from({ length: ship.length }).every((_, i) => cells[position.y + i][position.x] === null);
 		return position.y + ship.length <= GAME_DIMENSION && unused;
 	};
 
