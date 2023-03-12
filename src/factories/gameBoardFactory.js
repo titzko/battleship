@@ -54,10 +54,7 @@ const gameBoardFactory = () => {
 		ships.push(ship);
 	};
 
-	const getCells = () => cells;
-	const getShips = () => ships;
-
-	return { cells, getCells, createBoard, placeShip, ships, getShips };
+	return { cells, createBoard, placeShip, ships };
 };
 
 export { gameBoardFactory };
