@@ -1,11 +1,10 @@
 import { DIRECTION_HORIZONTAL, DIRECTION_VERTICAL, GAME_DIMENSION } from "../constants/constants";
 
 const gameBoardFactory = () => {
-	let cells = undefined;
+	const cells = [];
 	const ships = [];
 
 	const createBoard = (dimension) => {
-		cells = [];
 		for (let i = 0; i < dimension; i++) {
 			cells.push([]);
 			for (let n = 0; n < dimension; n++) {
@@ -56,8 +55,9 @@ const gameBoardFactory = () => {
 	};
 
 	const getCells = () => cells;
+	const getShips = () => ships;
 
-	return { getCells, createBoard, placeShip, ships };
+	return { cells, getCells, createBoard, placeShip, ships, getShips };
 };
 
 export { gameBoardFactory };
