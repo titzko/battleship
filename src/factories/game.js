@@ -35,7 +35,13 @@ let gameFactory = () => {
 
 	const handleCellClick = (event, player, computer) => {
 		const element = event.target;
+		const amountAttacks = player.board.attacks.length;
 		player.turn(position(element.dataset.y, element.dataset.x));
+
+		// return if user clicks a cell more than once
+		if (amountAttacks === player.board.attacks.length) {
+			return;
+		}
 		player.isWinner() ? handleWin(player) : computer.turn();
 
 		if (computer.isWinner()) {

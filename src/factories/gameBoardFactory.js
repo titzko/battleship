@@ -63,8 +63,17 @@ const gameBoardFactory = () => {
 		ship.gotHit();
 	};
 
+	const isValidAttack = (pos) => {
+		return !attacks.some((attack) => attack.x == pos.x && attack.y == pos.y);
+	};
+
 	const receiveAttack = (position, attacker) => {
 		let gotHit = false;
+
+		if (!isValidAttack(position)) {
+			return;
+		}
+
 		attacks.push(position);
 		if (cells[position.y][position.x] != null) {
 			let ship = cells[position.y][position.x];
@@ -75,7 +84,6 @@ const gameBoardFactory = () => {
 	};
 
 	const markCell = (position, attacker, gotHit) => {
-		console.log(attacker);
 		const cell = document.querySelector(`[data-user='${attacker}'][data-y='${position.y}'][data-x='${position.x}']`);
 		if (cell) {
 			gotHit ? (cell.style.backgroundColor = "red") : (cell.style.backgroundColor = "black");

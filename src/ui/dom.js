@@ -1,20 +1,17 @@
 import { GAME_DIMENSION } from "../constants/constants";
-import { position } from "../factories/position";
 
 function initPage() {
-	let pageWrapper = document.createElement("div");
+	const pageWrapper = document.createElement("div");
 	pageWrapper.classList.add("container");
 	document.querySelector("body").appendChild(pageWrapper);
 
 	const playerBoard = renderBoard("player-board", "Enemy Board", "player");
-	const computerBoard = renderBoard("player-board", "Your Board", "computer");
+	const computerBoard = renderBoard("computer-board", "Your Board", "computer");
 	pageWrapper.appendChild(playerBoard);
 	pageWrapper.appendChild(computerBoard);
 }
 
 function renderBoard(id, labelText, user) {
-	console.log(user);
-
 	const wrapper = document.createElement("div");
 	wrapper.classList.add("board-wrapper");
 
@@ -49,11 +46,11 @@ function renderCells(board, user) {
 }
 
 function renderShips() {
-	console.log("render ships");
+	//TODO
 }
 
 function renderButtons() {
-	console.log("render buttons");
+	//TODO
 }
 
 export { initPage };
