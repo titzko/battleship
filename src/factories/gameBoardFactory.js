@@ -3,6 +3,7 @@ import { DIRECTION_HORIZONTAL, DIRECTION_VERTICAL, GAME_DIMENSION } from "../con
 const gameBoardFactory = () => {
 	const cells = [];
 	const ships = [];
+	const attacks = [];
 
 	const createBoard = (dimension) => {
 		for (let i = 0; i < dimension; i++) {
@@ -54,7 +55,34 @@ const gameBoardFactory = () => {
 		ships.push(ship);
 	};
 
-	return { cells, createBoard, placeShip, ships };
+	const checkRemainingShips = () => {
+		return !ships.every((ship) => ship.isSunk());
+	};
+
+	const handleShipGotHit = (ship) => {
+		ship.gotHit();
+	};
+
+	const receiveAttack = (position, attacker) => {
+		let gotHit = false;
+		attacks.push(position);
+		if (cells[position.y][position.x] != null) {
+			let ship = cells[position.y][position.x];
+			handleShipGotHit(ship);
+			gotHit = true;
+		}
+		markCell(position, attacker, gotHit);
+	};
+
+	const markCell = (position, attacker, gotHit) => {
+		console.log(attacker);
+		const cell = document.querySelector(`[data-user='${attacker}'][data-y='${position.y}'][data-x='${position.x}']`);
+		if (cell) {
+			gotHit ? (cell.style.backgroundColor = "red") : (cell.style.backgroundColor = "black");
+		}
+	};
+
+	return { cells, createBoard, placeShip, ships, receiveAttack, attacks, checkRemainingShips };
 };
 
 export { gameBoardFactory };
