@@ -90,7 +90,7 @@ const gameBoardFactory = () => {
 		}
 	};
 
-	return { cells, createBoard, placeShip, ships, receiveAttack, attacks, checkRemainingShips };
+	return { cells, createBoard, placeShip, ships, receiveAttack, attacks, checkRemainingShips, isValidPlacement };
 };
 
 export { gameBoardFactory };

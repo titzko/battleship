@@ -11,20 +11,7 @@ let gameFactory = () => {
 		return board;
 	};
 
-	const placeShips = (board) => {
-		let ship1 = shipFactory(4);
-		board.placeShip(ship1, position(3, 5), DIRECTION_HORIZONTAL);
-
-		let ship2 = shipFactory(4);
-		board.placeShip(ship2, position(1, 1), DIRECTION_HORIZONTAL);
-
-		let ship3 = shipFactory(4);
-		board.placeShip(ship3, position(6, 6), DIRECTION_HORIZONTAL);
-	};
-
-	const createUser = (name, isComputer = false) => {
-		const board = createBoard();
-		placeShips(board);
+	const createUser = (name, board, isComputer = false) => {
 		const user = player(board, name, isComputer);
 		return user;
 	};
@@ -58,7 +45,7 @@ let gameFactory = () => {
 		});
 	};
 
-	return { createUser, startGame };
+	return { createUser, startGame, createBoard };
 };
 
 export { gameFactory };
