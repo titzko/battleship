@@ -14,13 +14,13 @@ const player = (board, name = "", isComputer = false) => {
 		let pos = undefined;
 
 		do {
-			pos = position(getRandInt(), getRandInt());
+			pos = position(getRandInt(GAME_DIMENSION), getRandInt(GAME_DIMENSION));
 		} while (!board.attacks.every((attack) => attack.x != pos.x || attack.y != pos.y));
 		board.receiveAttack(pos, name);
 	};
 
-	const getRandInt = () => {
-		return Math.floor(Math.random() * (GAME_DIMENSION - 0) + 0);
+	const getRandInt = (max) => {
+		return Math.floor(Math.random() * (max - 0) + 0);
 	};
 
 	const placeShip = (position, ship, direction, _board) => {
@@ -31,37 +31,19 @@ const player = (board, name = "", isComputer = false) => {
 		return shipFactory(length);
 	};
 
-	const checkFreeCellsHorizontal = (cellsWithShips, pos, length) => {
-		let result = true;
-		console.log(cellsWithShips);
-
-		for (let i = 0; i < length; i++) {
-			result = cellsWithShips.every((cell) => cell.x != pos.x + i && cell.y != pos.y);
-		}
-		return result;
-	};
-
-	const checkFreeCellsVertical = (cellsWithShips, x, y) => {};
-
 	const placeShipsRandomly = (_board) => {
-		const cellsWithShips = [];
 		SHIP_DIMENSIONS().map((length, i) => {
-			const dir = DIRECTION_HORIZONTAL;
-			const validPlacement = false;
+			let dir;
+			getRandInt(2) === 1 ? (dir = DIRECTION_HORIZONTAL) : (dir = DIRECTION_VERTICAL);
+
 			let ship = createShip(length);
 			let pos;
-
 			do {
-				pos = position(getRandInt(), getRandInt());
-			} while (
-				!(
-					checkFreeCellsHorizontal(cellsWithShips, pos, length) &&
-					_board.isValidPlacement(ship, pos, DIRECTION_HORIZONTAL)
-				)
-			);
+				pos = position(getRandInt(GAME_DIMENSION - length), getRandInt(GAME_DIMENSION - length));
+			} while (!_board.isValidPlacement(ship, pos, dir));
 			placeShip(pos, ship, dir, _board);
 		});
-		console.log(_board);
+		console.log(_board.cells);
 	};
 
 	const isWinner = () => hasWon;

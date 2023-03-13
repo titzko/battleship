@@ -36,7 +36,9 @@ const gameBoardFactory = () => {
 				cells[position.y][position.x + i] = ship;
 			}
 		} else {
-			console.error(`Ship ${ship} cant be placed here`);
+			console.error(
+				`Ship ${ship} with ${ship.length} cant be placed here horizontal: y: ${position.y}, x: ${position.x}`
+			);
 		}
 	};
 
@@ -46,7 +48,9 @@ const gameBoardFactory = () => {
 				cells[position.y + i][position.x] = ship;
 			}
 		} else {
-			console.error(`Ship ${ship} cant be placed here`);
+			console.error(
+				`Ship ${ship} with ${ship.length} cant be placed here vertical: y: ${position.y}, x: ${position.x}`
+			);
 		}
 	};
 
