@@ -1,6 +1,6 @@
 import { gameBoardFactory } from "./gameBoardFactory";
 import { shipFactory } from "./shipFactory";
-import { GAME_DIMENSION, DIRECTION_HORIZONTAL, DIRECTION_VERTICAL } from "../constants/constants";
+import { GAME_DIMENSION, DIRECTION_HORIZONTAL, DIRECTION_VERTICAL, SHIP_DIMENSIONS } from "../constants/constants";
 import { position } from "./position";
 import { player } from "./playerFactory";
 
@@ -36,7 +36,48 @@ let gameFactory = () => {
 		}
 	};
 
+	const placeShipOnClick = (cell, _player, _board, ships, computer) => {
+		if (ships.length === 0) {
+			return;
+		}
+		let x = cell.dataset.x;
+		let y = cell.dataset.y;
+		let ship_length = ships.shift();
+		let ship = shipFactory(ship_length);
+
+		_player.placeShip(position(Number(y), Number(x)), ship, DIRECTION_HORIZONTAL, _board);
+		if (ships.length === 0) {
+			startGame(_player, computer);
+		}
+	};
+
+	const addPlaceShipEventListener = (_player, _board, computer) => {
+		const computerCells = document.querySelectorAll('[data-user="computer"]');
+		const ships = SHIP_DIMENSIONS();
+		computerCells.forEach((cell) => {
+			cell.addEventListener("click", function () {
+				placeShipOnClick(cell, _player, _board, ships, computer);
+			});
+		});
+	};
+
+	const changeBoardState = () => {
+		const playerCells = document.querySelectorAll('[data-user="player"]');
+		playerCells.forEach((cell) => {
+			cell.classList.add("active");
+		});
+
+		const computerCells = document.querySelectorAll('[data-user="computer"]');
+		computerCells.forEach((cell) => {
+			cell.classList.remove("active");
+		});
+
+		document.getElementById("player-board").style.cursor = "pointer";
+		document.getElementById("computer-board").style.cursor = "not-allowed";
+	};
+
 	const startGame = (player, computer) => {
+		changeBoardState();
 		const cells = [...document.querySelectorAll(`[data-user*="player"]`)];
 		cells.map((cell) => {
 			cell.addEventListener("click", () => {
@@ -45,7 +86,7 @@ let gameFactory = () => {
 		});
 	};
 
-	return { createUser, startGame, createBoard };
+	return { createUser, startGame, createBoard, addPlaceShipEventListener };
 };
 
 export { gameFactory };

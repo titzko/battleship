@@ -25,6 +25,24 @@ const player = (board, name = "", isComputer = false) => {
 
 	const placeShip = (position, ship, direction, _board) => {
 		_board.placeShip(ship, position, direction);
+		if (!isComputer && direction === DIRECTION_HORIZONTAL) {
+			for (let i = 0; i < ship.length; i++) {
+				let cell = document.querySelector(`[data-user='computer'][data-y='${position.y}'][data-x='${position.x + i}']`);
+				cell.style.backgroundColor = "green";
+			}
+		}
+
+		if (!isComputer && direction === DIRECTION_VERTICAL) {
+			for (let i = 0; i < ship.length; i++) {
+				let cell = document.querySelector(`[data-user='computer'][data-y='${position.y + i}'][data-x='${position.x}']`);
+				cell.style.backgroundColor = "green";
+			}
+		}
+
+		const computerCells = document.querySelectorAll('[data-user="computer"]');
+		computerCells.forEach((cell) => {
+			cell.classList.add("active");
+		});
 	};
 
 	const createShip = (length) => {

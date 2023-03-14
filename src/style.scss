@@ -8,20 +8,16 @@ body {
 	justify-content: center;
 	color: darken(#ccc, 50%);
 
+	.active:hover {
+		background-color: darken($color: #fff, $amount: 50%);
+	}
+
 	.container {
 		display: flex;
 	}
 
-	#player-board {
-		cursor: pointer;
-
-		.cell:hover {
-			background-color: darken($color: #fff, $amount: 50%);
-		}
-	}
-
 	#computer-board {
-		cursor: not-allowed;
+		cursor: pointer;
 	}
 
 	.board-wrapper {
