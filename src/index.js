@@ -16,13 +16,6 @@ function init() {
 	game.addPlaceShipEventListener(player, board2, computer);
 
 	computer.placeShipsRandomly(board1);
-
-	// TODO -> create const with shiplength as array "[4,4,3,3,2,2]"							-> done
-	// TODO -> place ships for computer randomly -> player gets function placeShipsRandomly		-> done
-	// TODO -> on cell click -> place ship for player
-	// TODO -> some styles
-
-	//game.startGame(player, computer);
 }
 
 init();
