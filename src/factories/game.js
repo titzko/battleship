@@ -1,17 +1,39 @@
 import { gameBoardFactory } from "./gameBoardFactory";
 import { shipFactory } from "./shipFactory";
 import { GAME_DIMENSION, DIRECTION_HORIZONTAL, DIRECTION_VERTICAL, SHIP_DIMENSIONS } from "../constants/constants";
+import { dom } from "./../ui/dom";
 import { position } from "./position";
 import { player } from "./playerFactory";
 
 let gameFactory = () => {
 	let _player = null;
 	let computer = null;
+	let _dom = null;
+
+	const init = function () {
+		setupDom.call(this);
+		createPlayers.call(this);
+	};
+
+	const setupDom = function () {
+		this._dom = dom();
+		this._dom.initPage();
+	};
 
 	const createBoard = () => {
 		const board = gameBoardFactory();
 		board.createBoard(GAME_DIMENSION);
 		return board;
+	};
+
+	const createPlayers = function () {
+		const board1 = createBoard();
+		const board2 = createBoard();
+		createUser.call(this, "player", board1, false);
+		createUser.call(this, "computer", board2, true);
+		this.computer.placeShipsRandomlyOnBoard(board1);
+		// alternative of using call would be to export the function and then -> this.startShipPlacementPhase()
+		startShipPlacementPhase.call(this);
 	};
 
 	const createUser = function (name, board, isComputer = false) {
@@ -55,7 +77,7 @@ let gameFactory = () => {
 		}
 	};
 
-	const addPlaceShipEventListener = function (_player, _board, computer) {
+	const startShipPlacementPhase = function () {
 		const computerCells = document.querySelectorAll('[data-user="computer"]');
 		const ships = SHIP_DIMENSIONS();
 		computerCells.forEach((cell) => {
@@ -91,7 +113,7 @@ let gameFactory = () => {
 		});
 	};
 
-	return { createUser, startGame, createBoard, addPlaceShipEventListener, _player, computer };
+	return { _player, computer, init };
 };
 
 export { gameFactory };
