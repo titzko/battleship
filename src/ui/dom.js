@@ -40,8 +40,8 @@ function renderCells(board, user) {
 			cell.dataset.x = j;
 
 			row.appendChild(cell);
-			board.appendChild(row);
 		}
+		board.appendChild(row);
 	}
 }
 

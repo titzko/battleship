@@ -13,6 +13,7 @@ function init() {
 	const board2 = game.createBoard();
 	const player = game.createUser("player", board1, false);
 	const computer = game.createUser("computer", board2, true);
+	console.log(game);
 	game.addPlaceShipEventListener(player, board2, computer);
 
 	computer.placeShipsRandomly(board1);
