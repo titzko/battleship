@@ -1,56 +1,60 @@
 import { GAME_DIMENSION } from "../constants/constants";
 
-function initPage() {
-	const pageWrapper = document.createElement("div");
-	pageWrapper.classList.add("container");
-	document.querySelector("body").appendChild(pageWrapper);
+const dom = () => {
+	const initPage = function () {
+		const pageWrapper = document.createElement("div");
+		pageWrapper.classList.add("container");
+		document.querySelector("body").appendChild(pageWrapper);
 
-	const playerBoard = renderBoard("player-board", "Enemy Board", "player");
-	const computerBoard = renderBoard("computer-board", "Your Board", "computer");
-	pageWrapper.appendChild(playerBoard);
-	pageWrapper.appendChild(computerBoard);
-}
+		const playerBoard = renderBoard("player-board", "Enemy Board", "player");
+		const computerBoard = renderBoard("computer-board", "Your Board", "computer");
+		pageWrapper.appendChild(playerBoard);
+		pageWrapper.appendChild(computerBoard);
+	};
 
-function renderBoard(id, labelText, user) {
-	const wrapper = document.createElement("div");
-	wrapper.classList.add("board-wrapper");
+	function renderBoard(id, labelText, user) {
+		const wrapper = document.createElement("div");
+		wrapper.classList.add("board-wrapper");
 
-	const board = document.createElement("div");
-	board.classList.add("board");
-	board.id = id;
-	wrapper.appendChild(board);
-	renderCells(board, user);
+		const board = document.createElement("div");
+		board.classList.add("board");
+		board.id = id;
+		wrapper.appendChild(board);
+		renderCells(board, user);
 
-	const label = document.createElement("div");
-	label.classList.add("board-label");
-	label.innerHTML = labelText;
-	wrapper.appendChild(label);
-	return wrapper;
-}
+		const label = document.createElement("div");
+		label.classList.add("board-label");
+		label.innerHTML = labelText;
+		wrapper.appendChild(label);
+		return wrapper;
+	}
 
-function renderCells(board, user) {
-	for (let i = 0; i < GAME_DIMENSION; i++) {
-		let row = document.createElement("div");
-		row.classList.add("row");
-		for (let j = 0; j < GAME_DIMENSION; j++) {
-			let cell = document.createElement("div");
-			cell.classList.add("cell");
-			cell.dataset.user = user;
-			cell.dataset.y = i;
-			cell.dataset.x = j;
+	function renderCells(board, user) {
+		for (let i = 0; i < GAME_DIMENSION; i++) {
+			let row = document.createElement("div");
+			row.classList.add("row");
+			for (let j = 0; j < GAME_DIMENSION; j++) {
+				let cell = document.createElement("div");
+				cell.classList.add("cell");
+				cell.dataset.user = user;
+				cell.dataset.y = i;
+				cell.dataset.x = j;
 
-			row.appendChild(cell);
+				row.appendChild(cell);
+			}
 			board.appendChild(row);
 		}
 	}
-}
 
-function renderShips() {
-	//TODO
-}
+	function renderShips() {
+		//TODO
+	}
 
-function renderButtons() {
-	//TODO
-}
+	function renderButtons() {
+		//TODO
+	}
 
-export { initPage };
+	return { initPage };
+};
+
+export { dom };

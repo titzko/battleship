@@ -49,7 +49,7 @@ const player = (board, name = "", isComputer = false) => {
 		return shipFactory(length);
 	};
 
-	const placeShipsRandomly = (_board) => {
+	const placeShipsRandomlyOnBoard = (_board) => {
 		SHIP_DIMENSIONS().map((length, i) => {
 			let dir;
 			getRandInt(2) === 1 ? (dir = DIRECTION_HORIZONTAL) : (dir = DIRECTION_VERTICAL);
@@ -61,12 +61,11 @@ const player = (board, name = "", isComputer = false) => {
 			} while (!_board.isValidPlacement(ship, pos, dir));
 			placeShip(pos, ship, dir, _board);
 		});
-		console.log(_board.cells);
 	};
 
 	const isWinner = () => hasWon;
 
-	return { name, turn, isWinner, board, placeShip, placeShipsRandomly };
+	return { name, turn, isWinner, board, placeShip, placeShipsRandomlyOnBoard };
 };
 
 export { player };
