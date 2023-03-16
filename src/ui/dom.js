@@ -64,7 +64,6 @@ const dom = () => {
 		this.shipsToPlace = [...ships];
 		this.headline.innerHTML = "Place your ships!";
 		ships.forEach((ship) => drawShip.call(this, ship));
-		console.log(this);
 	}
 
 	function drawShip(ship) {
