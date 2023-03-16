@@ -1,15 +1,29 @@
 import { GAME_DIMENSION } from "../constants/constants";
 
 const dom = () => {
-	const initPage = function () {
-		const pageWrapper = document.createElement("div");
-		pageWrapper.classList.add("container");
-		document.querySelector("body").appendChild(pageWrapper);
+	const headline = null;
+	const footer = null;
+	const shipsToPlace = null;
 
+	const createElement = (htmlTag, id, appender = document.querySelector("body"), _class = "") => {
+		const element = document.createElement(`${htmlTag}`);
+		id && (element.id = `${id}`);
+		_class && element.classList.add(_class);
+		appender.appendChild(element);
+		return element;
+	};
+
+	const initPage = function () {
+		const body = document.querySelector("body");
+		this.headline = createElement("h1", "headline", body);
+
+		const pageWrapper = createElement("div", "headline", body, "container");
 		const playerBoard = renderBoard("player-board", "Enemy Board", "player");
 		const computerBoard = renderBoard("computer-board", "Your Board", "computer");
 		pageWrapper.appendChild(playerBoard);
 		pageWrapper.appendChild(computerBoard);
+
+		this.footer = createElement("div", "footer");
 	};
 
 	function renderBoard(id, labelText, user) {
@@ -46,15 +60,24 @@ const dom = () => {
 		}
 	}
 
-	function renderShips() {
-		//TODO
+	function initShipPlacements(ships) {
+		this.shipsToPlace = [...ships];
+		this.headline.innerHTML = "Place your ships!";
+		ships.forEach((ship) => drawShip.call(this, ship));
 	}
 
-	function renderButtons() {
-		//TODO
+	function drawShip(ship) {
+		const wrapper = createElement("div", "", this.footer, "ship-wrapper");
+		for (let i = 0; i < ship; i++) {
+			createElement("div", "", wrapper, "cell");
+		}
 	}
 
-	return { initPage };
+	function removePlacementShip() {
+		this.footer.firstElementChild.remove();
+	}
+
+	return { initPage, initShipPlacements, headline, footer, shipsToPlace, removePlacementShip };
 };
 
 export { dom };
