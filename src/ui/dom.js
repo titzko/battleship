@@ -15,7 +15,7 @@ const dom = () => {
 
 	const initPage = function () {
 		const body = document.querySelector("body");
-		this.headline = createElement("h1", "headline", body);
+		this.headline = createElement("h1", "headline");
 
 		const pageWrapper = createElement("div", "headline", body, "container");
 		const playerBoard = renderBoard("player-board", "Enemy Board", "player");
@@ -30,33 +30,23 @@ const dom = () => {
 		const wrapper = document.createElement("div");
 		wrapper.classList.add("board-wrapper");
 
-		const board = document.createElement("div");
-		board.classList.add("board");
-		board.id = id;
-		wrapper.appendChild(board);
+		const board = createElement("div", id, wrapper, "board");
 		renderCells(board, user);
 
-		const label = document.createElement("div");
-		label.classList.add("board-label");
+		const label = createElement("div", "", wrapper, "board-label");
 		label.innerHTML = labelText;
-		wrapper.appendChild(label);
 		return wrapper;
 	}
 
 	function renderCells(board, user) {
 		for (let i = 0; i < GAME_DIMENSION; i++) {
-			let row = document.createElement("div");
-			row.classList.add("row");
+			let row = createElement("div", "", board, "row");
 			for (let j = 0; j < GAME_DIMENSION; j++) {
-				let cell = document.createElement("div");
-				cell.classList.add("cell");
+				let cell = createElement("div", "", row, "cell");
 				cell.dataset.user = user;
 				cell.dataset.y = i;
 				cell.dataset.x = j;
-
-				row.appendChild(cell);
 			}
-			board.appendChild(row);
 		}
 	}
 
