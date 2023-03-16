@@ -6,7 +6,12 @@ body {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	flex-direction: column;
 	color: darken(#ccc, 50%);
+
+	#headline {
+		color: green;
+	}
 
 	.active:hover {
 		background-color: darken($color: #fff, $amount: 50%);
@@ -38,6 +43,27 @@ body {
 		.board-label {
 			display: flex;
 			justify-content: center;
+		}
+	}
+
+	#footer {
+		display: flex;
+		flex-wrap: wrap;
+
+		.ship-wrapper {
+			display: flex;
+			flex-direction: row;
+			margin: 8px;
+
+			&:first-child {
+				background-color: green;
+			}
+
+			.cell {
+				width: 35px;
+				height: 35px;
+				border: 1px solid #ccc;
+			}
 		}
 	}
 }

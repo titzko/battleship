@@ -75,11 +75,14 @@ let gameFactory = () => {
 		if (ships.length === 0) {
 			startGame.call(this);
 		}
+
+		this._dom.removePlacementShip();
 	};
 
 	const startShipPlacementPhase = function () {
-		const computerCells = document.querySelectorAll('[data-user="computer"]');
 		const ships = SHIP_DIMENSIONS();
+		this._dom.initShipPlacements(ships);
+		const computerCells = document.querySelectorAll('[data-user="computer"]');
 		computerCells.forEach((cell) => {
 			cell.addEventListener("click", () => {
 				placeShipOnClick.call(this, cell, ships);
