@@ -20,29 +20,40 @@ const dom = () => {
 		const pageWrapper = createElement("div", "headline", body, "container");
 		const playerBoard = renderBoard("player-board", "Enemy Board", "player");
 		const computerBoard = renderBoard("computer-board", "Your Board", "computer");
-		computerBoard.addEventListener("dragover", function (event) {
-			event.preventDefault();
-		});
-		computerBoard.addEventListener("drop", function (event) {
-			event.preventDefault();
-			//console.log(event.dataTransfer.getData("text/plain"));
-
-			//console.log(event.target); <- this is a cell
-			const data = JSON.parse(event.dataTransfer.getData("text/plain"));
-			const target = event.target;
-
-			let valid = false;
-			data.direction === "x"
-				? (valid = data.amount + Number(target.dataset.x) <= GAME_DIMENSION)
-				: (valid = data.amount + Number(target.dataset.y) <= GAME_DIMENSION);
-
-			valid && event.target.click();
-		});
+		computerBoard.addEventListener("dragover", handleDragableEvent);
+		computerBoard.addEventListener("drop", handleDropEvent);
 
 		pageWrapper.appendChild(playerBoard);
 		pageWrapper.appendChild(computerBoard);
 
+		const btn = createElement("button", "direction-btn");
+		btn.innerHTML = "change Direction";
+		btn.classList.add("btn");
+		btn.addEventListener("click", changeDirection);
+
 		this.footer = createElement("div", "footer");
+	};
+
+	const handleDragableEvent = (event) => {
+		event.preventDefault();
+	};
+
+	const removeDirectionButton = () => {
+		document.getElementById("direction-btn").remove();
+	};
+
+	const handleDropEvent = (event) => {
+		event.preventDefault();
+		const data = JSON.parse(event.dataTransfer.getData("text/plain"));
+		const target = event.target;
+
+		let valid = false;
+		data.direction === "x"
+			? (valid = data.amount + Number(target.dataset.x) <= GAME_DIMENSION)
+			: (valid = data.amount + Number(target.dataset.y) <= GAME_DIMENSION);
+
+		target.dataset.direction = data.direction;
+		valid && event.target.click();
 	};
 
 	const renderBoard = (id, labelText, user) => {
@@ -86,14 +97,38 @@ const dom = () => {
 		wrapper.dataset.direction = "x";
 
 		wrapper.addEventListener("dragstart", function (event) {
-			event.target.classList.add("dragging");
-			event.dataTransfer.setData("text/plain", JSON.stringify({ direction: "x", amount: ship }));
+			handleDragStart(event, ship);
 		});
 		wrapper.addEventListener("dragend", function (event) {
-			// Remove the 'dragging' class from the element
 			event.target.classList.remove("dragging");
 		});
 	}
+
+	const handleDragStart = (event, ship) => {
+		const direction = event.target.dataset.direction;
+		event.target.classList.add("dragging");
+		event.dataTransfer.setData("text/plain", JSON.stringify({ direction: direction, amount: ship }));
+	};
+
+	const changeDirection = () => {
+		const elements = [...document.querySelectorAll(".ship-wrapper")];
+		const direction = elements[0].dataset.direction;
+		direction === "x" ? setDirectionY(elements) : setDirectionX(elements);
+	};
+
+	const setDirectionX = (elements) => {
+		elements.forEach((element) => {
+			element.style.flexDirection = "row";
+			element.dataset.direction = "x";
+		});
+	};
+
+	const setDirectionY = (elements) => {
+		elements.forEach((element) => {
+			element.style.flexDirection = "column";
+			element.dataset.direction = "y";
+		});
+	};
 
 	function updateLabel() {
 		this.headline.innerHTML = "Attack the enemy now!";
@@ -103,7 +138,16 @@ const dom = () => {
 		this.footer.firstElementChild.remove();
 	}
 
-	return { initPage, initShipPlacements, headline, footer, shipsToPlace, removePlacementShip, updateLabel };
+	return {
+		initPage,
+		initShipPlacements,
+		headline,
+		footer,
+		shipsToPlace,
+		removePlacementShip,
+		updateLabel,
+		removeDirectionButton,
+	};
 };
 
 export { dom };

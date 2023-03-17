@@ -68,10 +68,11 @@ let gameFactory = () => {
 		}
 		let x = cell.dataset.x;
 		let y = cell.dataset.y;
+		let direction = cell.dataset.direction === "x" ? DIRECTION_HORIZONTAL : DIRECTION_VERTICAL;
 		let ship_length = ships.shift();
 		let ship = shipFactory(ship_length);
 
-		this._player.placeShip(position(Number(y), Number(x)), ship, DIRECTION_HORIZONTAL, this.computer.board);
+		this._player.placeShip(position(Number(y), Number(x)), ship, direction, this.computer.board);
 		if (ships.length === 0) {
 			startGame.call(this);
 		}
@@ -107,6 +108,7 @@ let gameFactory = () => {
 
 	const startGame = function () {
 		this._dom.updateLabel();
+		this._dom.removeDirectionButton();
 		changeBoardState();
 		const cells = [...document.querySelectorAll(`[data-user*="player"]`)];
 		const self = this;
