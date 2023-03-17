@@ -51,12 +51,11 @@ body {
 		flex-wrap: wrap;
 
 		.ship-wrapper {
-			display: flex;
-			flex-direction: row;
-			margin: 8px;
+			display: none;
 
 			&:first-child {
 				background-color: green;
+				display: flex !important;
 			}
 
 			.cell {
@@ -65,5 +64,10 @@ body {
 				border: 1px solid #ccc;
 			}
 		}
+	}
+
+	.dragging {
+		opacity: 0.5;
+		cursor: move;
 	}
 }
