@@ -106,6 +106,7 @@ let gameFactory = () => {
 	};
 
 	const startGame = function () {
+		this._dom.updateLabel();
 		changeBoardState();
 		const cells = [...document.querySelectorAll(`[data-user*="player"]`)];
 		const self = this;
