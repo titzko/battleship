@@ -29,6 +29,7 @@ let gameFactory = () => {
 	const createPlayers = function () {
 		const board1 = createBoard();
 		const board2 = createBoard();
+		let name = prompt("Enter your name");
 		createUser.call(this, "player", board1, false);
 		createUser.call(this, "computer", board2, true);
 		this.computer.placeShipsRandomlyOnBoard(board1);

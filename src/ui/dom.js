@@ -32,7 +32,15 @@ const dom = () => {
 		btn.addEventListener("click", changePlacementDirection);
 
 		this.footer = createElement("div", "footer");
+		// dirty solution, which handles the problem that a cell has to be clicked in order a ship placement happens
+		// should refactor the code, that its not a cell click but the drop event itself
+		// right now, the drop event triggers a cell click
+		document.getElementById("computer-board").addEventListener("click", stopClickPropagation, true);
 	};
+
+	function stopClickPropagation(e) {
+		e.stopPropagation();
+	}
 
 	const handleDragableEvent = (event) => {
 		event.preventDefault();
@@ -46,21 +54,26 @@ const dom = () => {
 		event.preventDefault();
 		const data = JSON.parse(event.dataTransfer.getData("text/plain"));
 		const target = event.target;
-
-		let valid = false;
-		data.direction === "x"
-			? (valid = data.amount + Number(target.dataset.x) <= GAME_DIMENSION)
-			: (valid = data.amount + Number(target.dataset.y) <= GAME_DIMENSION);
-
 		target.dataset.direction = data.direction;
 
 		const adjustment = data.cellPos;
 		const y = target.dataset.y - adjustment;
 		const x = target.dataset.x;
 
+		let valid = false;
+		data.direction === "x"
+			? (valid = data.amount + Number(target.dataset.x) <= GAME_DIMENSION)
+			: (valid = data.amount + Number(target.dataset.y - adjustment) <= GAME_DIMENSION);
+
+		if (!valid) {
+			document.getElementById("computer-board").addEventListener("click", stopClickPropagation, true);
+			return;
+		}
+
 		const adjustedCell = document.querySelector(`.cell[data-user="computer"][data-y="${y}"][data-x="${x}"]`);
 
-		valid && data.direction === "x" ? event.target.click() : adjustedCell.click();
+		data.direction === "x" ? event.target.click() : adjustedCell.click();
+		document.getElementById("computer-board").addEventListener("click", stopClickPropagation, true);
 	};
 
 	const renderBoard = (id, labelText, user) => {
@@ -115,6 +128,7 @@ const dom = () => {
 	}
 
 	const handleDragStart = (event, ship) => {
+		document.getElementById("computer-board").removeEventListener("click", stopClickPropagation, true);
 		const direction = event.target.dataset.direction;
 		const cellPos = event.target.dataset.dragedCellPosition;
 
