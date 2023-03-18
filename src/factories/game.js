@@ -30,22 +30,23 @@ let gameFactory = () => {
 		const board1 = createBoard();
 		const board2 = createBoard();
 		let name = prompt("Enter your name");
-		createUser.call(this, "player", board1, false);
+		createUser.call(this, "player", board1, false, name);
 		createUser.call(this, "computer", board2, true);
 		this.computer.placeShipsRandomlyOnBoard(board1);
 		// alternative of using call would be to export the function and then -> this.startShipPlacementPhase()
 		startShipPlacementPhase.call(this);
+		console.log(this._player);
 	};
 
-	const createUser = function (name, board, isComputer = false) {
-		const user = player(board, name, isComputer);
+	const createUser = function (name, board, isComputer = false, displayName = "Computer") {
+		const user = player(board, name, isComputer, displayName);
 		isComputer ? (this.computer = user) : (this._player = user);
 		return user;
 	};
 
 	const handleWin = (player, dom) => {
-		alert(`${player.name} won! Well played`);
-		dom.updateLabel(`${player.name} won! Well played`);
+		alert(`${player.displayName} won! Well played`);
+		dom.updateLabel(`${player.displayName} won! Well played`);
 	};
 
 	const handleCellClick = function (event) {
@@ -109,7 +110,7 @@ let gameFactory = () => {
 	};
 
 	const startGame = function () {
-		this._dom.updateLabel("Attack the enemy now!");
+		this._dom.updateLabel(`Attack the enemy now ${this._player.displayName}!`);
 		this._dom.removeDirectionButton();
 		changeBoardState();
 		const cells = [...document.querySelectorAll(`[data-user*="player"]`)];

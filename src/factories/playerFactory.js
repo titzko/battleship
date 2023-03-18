@@ -2,7 +2,7 @@ import { GAME_DIMENSION, DIRECTION_HORIZONTAL, DIRECTION_VERTICAL, SHIP_DIMENSIO
 import { position } from "./position";
 import { shipFactory } from "./shipFactory";
 
-const player = (board, name = "", isComputer = false) => {
+const player = (board, name = "", isComputer = false, displayName) => {
 	let hasWon = false;
 
 	const turn = (position) => {
@@ -65,7 +65,7 @@ const player = (board, name = "", isComputer = false) => {
 
 	const isWinner = () => hasWon;
 
-	return { name, turn, isWinner, board, placeShip, placeShipsRandomlyOnBoard };
+	return { name, turn, isWinner, board, placeShip, placeShipsRandomlyOnBoard, displayName };
 };
 
 export { player };

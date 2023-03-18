@@ -6,7 +6,7 @@ const dom = () => {
 	const shipsToPlace = null;
 
 	const createElement = (htmlTag, id, appender = document.querySelector("body"), _class = "") => {
-		const element = document.createElement(`${htmlTag}`);
+		const element = document.createElement(htmlTag);
 		id && (element.id = `${id}`);
 		_class && element.classList.add(_class);
 		appender.appendChild(element);
@@ -32,9 +32,14 @@ const dom = () => {
 		btn.addEventListener("click", changePlacementDirection);
 
 		this.footer = createElement("div", "footer");
-		// dirty solution, which handles the problem that a cell has to be clicked in order a ship placement happens
-		// should refactor the code, that its not a cell click but the drop event itself
-		// right now, the drop event triggers a cell click
+
+		// dirty solution, which handles the problem that a cell has to be clicked for a ship placement to happen
+		// however, for the user, i dont want him to click a cell on the board and then a ship gets placed
+		// i want him to drag a ship
+		// so i add this event listener, which basically just prevents the eventlistener from cell-click to execute
+		// should refactor the code, such that its not a cell click but the drop event itself, whcih places a ship
+		// right now, dragstart removes this eventlistener, and here in drop event, the listner gets added again
+		// the drop event itself just triggers a cell click
 		document.getElementById("computer-board").addEventListener("click", stopClickPropagation, true);
 	};
 
@@ -102,7 +107,7 @@ const dom = () => {
 
 	function initShipPlacements(ships) {
 		this.shipsToPlace = [...ships];
-		this.headline.innerHTML = "Place your ships!";
+		this.headline.innerHTML = "Place your ships on your own board!";
 		ships.forEach((ship) => drawShip.call(this, ship));
 	}
 
