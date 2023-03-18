@@ -42,8 +42,9 @@ let gameFactory = () => {
 		return user;
 	};
 
-	const handleWin = (player) => {
+	const handleWin = (player, dom) => {
 		alert(`${player.name} won! Well played`);
+		dom.updateLabel(`${player.name} won! Well played`);
 	};
 
 	const handleCellClick = function (event) {
@@ -55,10 +56,10 @@ let gameFactory = () => {
 		if (amountAttacks === this._player.board.attacks.length) {
 			return;
 		}
-		this._player.isWinner() ? handleWin(this._player) : this.computer.turn();
+		this._player.isWinner() ? handleWin(this._player, this._dom) : this.computer.turn();
 
 		if (this.computer.isWinner()) {
-			handleWin(this.computer);
+			handleWin(this.computer, this._dom);
 		}
 	};
 
@@ -107,7 +108,7 @@ let gameFactory = () => {
 	};
 
 	const startGame = function () {
-		this._dom.updateLabel();
+		this._dom.updateLabel("Attack the enemy now!");
 		this._dom.removeDirectionButton();
 		changeBoardState();
 		const cells = [...document.querySelectorAll(`[data-user*="player"]`)];

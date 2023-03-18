@@ -53,7 +53,14 @@ const dom = () => {
 			: (valid = data.amount + Number(target.dataset.y) <= GAME_DIMENSION);
 
 		target.dataset.direction = data.direction;
-		valid && event.target.click();
+
+		const adjustment = data.cellPos;
+		const y = target.dataset.y - adjustment;
+		const x = target.dataset.x;
+
+		const adjustedCell = document.querySelector(`.cell[data-user="computer"][data-y="${y}"][data-x="${x}"]`);
+
+		valid && data.direction === "x" ? event.target.click() : adjustedCell.click();
 	};
 
 	const renderBoard = (id, labelText, user) => {
@@ -89,7 +96,10 @@ const dom = () => {
 	function drawShip(ship) {
 		const wrapper = createElement("div", "", this.footer, "ship-wrapper");
 		for (let i = 0; i < ship; i++) {
-			createElement("div", "", wrapper, "cell");
+			let cell = createElement("div", "", wrapper, "cell");
+			cell.addEventListener("mousedown", function () {
+				wrapper.dataset.dragedCellPosition = i;
+			});
 		}
 
 		wrapper.setAttribute("draggable", "true");
@@ -106,8 +116,10 @@ const dom = () => {
 
 	const handleDragStart = (event, ship) => {
 		const direction = event.target.dataset.direction;
+		const cellPos = event.target.dataset.dragedCellPosition;
+
 		event.target.classList.add("dragging");
-		event.dataTransfer.setData("text/plain", JSON.stringify({ direction: direction, amount: ship }));
+		event.dataTransfer.setData("text/plain", JSON.stringify({ direction, amount: ship, cellPos }));
 	};
 
 	const changePlacementDirection = () => {
@@ -120,8 +132,8 @@ const dom = () => {
 		});
 	};
 
-	function updateLabel() {
-		this.headline.innerHTML = "Attack the enemy now!";
+	function updateLabel(label) {
+		this.headline.innerHTML = label;
 	}
 
 	function removePlacementShip() {
