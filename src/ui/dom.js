@@ -6,7 +6,7 @@ const dom = () => {
 	const shipsToPlace = null;
 
 	const createElement = (htmlTag, id, appender = document.querySelector("body"), _class = "") => {
-		const element = document.createElement(`${htmlTag}`);
+		const element = document.createElement(htmlTag);
 		id && (element.id = `${id}`);
 		_class && element.classList.add(_class);
 		appender.appendChild(element);
@@ -32,7 +32,20 @@ const dom = () => {
 		btn.addEventListener("click", changePlacementDirection);
 
 		this.footer = createElement("div", "footer");
+
+		// dirty solution, which handles the problem that a cell has to be clicked for a ship placement to happen
+		// however, for the user, i dont want him to click a cell on the board and then a ship gets placed
+		// i want him to drag a ship
+		// so i add this event listener, which basically just prevents the eventlistener from cell-click to execute
+		// should refactor the code, such that its not a cell click but the drop event itself, whcih places a ship
+		// right now, dragstart removes this eventlistener, and here in drop event, the listner gets added again
+		// the drop event itself just triggers a cell click
+		document.getElementById("computer-board").addEventListener("click", stopClickPropagation, true);
 	};
+
+	function stopClickPropagation(e) {
+		e.stopPropagation();
+	}
 
 	const handleDragableEvent = (event) => {
 		event.preventDefault();
@@ -46,14 +59,26 @@ const dom = () => {
 		event.preventDefault();
 		const data = JSON.parse(event.dataTransfer.getData("text/plain"));
 		const target = event.target;
+		target.dataset.direction = data.direction;
+
+		const adjustment = data.cellPos;
+		const y = target.dataset.y - adjustment;
+		const x = target.dataset.x;
 
 		let valid = false;
 		data.direction === "x"
 			? (valid = data.amount + Number(target.dataset.x) <= GAME_DIMENSION)
-			: (valid = data.amount + Number(target.dataset.y) <= GAME_DIMENSION);
+			: (valid = data.amount + Number(target.dataset.y - adjustment) <= GAME_DIMENSION);
 
-		target.dataset.direction = data.direction;
-		valid && event.target.click();
+		if (!valid) {
+			document.getElementById("computer-board").addEventListener("click", stopClickPropagation, true);
+			return;
+		}
+
+		const adjustedCell = document.querySelector(`.cell[data-user="computer"][data-y="${y}"][data-x="${x}"]`);
+
+		data.direction === "x" ? event.target.click() : adjustedCell.click();
+		document.getElementById("computer-board").addEventListener("click", stopClickPropagation, true);
 	};
 
 	const renderBoard = (id, labelText, user) => {
@@ -82,14 +107,17 @@ const dom = () => {
 
 	function initShipPlacements(ships) {
 		this.shipsToPlace = [...ships];
-		this.headline.innerHTML = "Place your ships!";
+		this.headline.innerHTML = "Place your ships on your own board!";
 		ships.forEach((ship) => drawShip.call(this, ship));
 	}
 
 	function drawShip(ship) {
 		const wrapper = createElement("div", "", this.footer, "ship-wrapper");
 		for (let i = 0; i < ship; i++) {
-			createElement("div", "", wrapper, "cell");
+			let cell = createElement("div", "", wrapper, "cell");
+			cell.addEventListener("mousedown", function () {
+				wrapper.dataset.dragedCellPosition = i;
+			});
 		}
 
 		wrapper.setAttribute("draggable", "true");
@@ -105,9 +133,12 @@ const dom = () => {
 	}
 
 	const handleDragStart = (event, ship) => {
+		document.getElementById("computer-board").removeEventListener("click", stopClickPropagation, true);
 		const direction = event.target.dataset.direction;
+		const cellPos = event.target.dataset.dragedCellPosition;
+
 		event.target.classList.add("dragging");
-		event.dataTransfer.setData("text/plain", JSON.stringify({ direction: direction, amount: ship }));
+		event.dataTransfer.setData("text/plain", JSON.stringify({ direction, amount: ship, cellPos }));
 	};
 
 	const changePlacementDirection = () => {
@@ -120,8 +151,8 @@ const dom = () => {
 		});
 	};
 
-	function updateLabel() {
-		this.headline.innerHTML = "Attack the enemy now!";
+	function updateLabel(label) {
+		this.headline.innerHTML = label;
 	}
 
 	function removePlacementShip() {
