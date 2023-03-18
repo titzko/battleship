@@ -49,9 +49,14 @@ body {
 	#footer {
 		display: flex;
 		flex-wrap: wrap;
+		height: 200px;
+		width: 100%;
+		justify-content: center;
+		align-items: center;
 
 		.ship-wrapper {
 			display: none;
+			cursor: grab;
 
 			&:first-child {
 				background-color: green;
