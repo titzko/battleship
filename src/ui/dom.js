@@ -29,7 +29,7 @@ const dom = () => {
 		const btn = createElement("button", "direction-btn");
 		btn.innerHTML = "change Direction";
 		btn.classList.add("btn");
-		btn.addEventListener("click", changeDirection);
+		btn.addEventListener("click", changePlacementDirection);
 
 		this.footer = createElement("div", "footer");
 	};
@@ -110,23 +110,13 @@ const dom = () => {
 		event.dataTransfer.setData("text/plain", JSON.stringify({ direction: direction, amount: ship }));
 	};
 
-	const changeDirection = () => {
+	const changePlacementDirection = () => {
 		const elements = [...document.querySelectorAll(".ship-wrapper")];
 		const direction = elements[0].dataset.direction;
-		direction === "x" ? setDirectionY(elements) : setDirectionX(elements);
-	};
-
-	const setDirectionX = (elements) => {
+		const changeToY = direction === "x";
 		elements.forEach((element) => {
-			element.style.flexDirection = "row";
-			element.dataset.direction = "x";
-		});
-	};
-
-	const setDirectionY = (elements) => {
-		elements.forEach((element) => {
-			element.style.flexDirection = "column";
-			element.dataset.direction = "y";
+			element.style.flexDirection = changeToY ? "column" : "row";
+			element.dataset.direction = changeToY ? "y" : "x";
 		});
 	};
 
