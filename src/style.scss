@@ -14,6 +14,7 @@ body {
 	}
 
 	.active {
+
 		&:hover {
 			background-color: darken($color: #fff, $amount: 50%);
 		}
@@ -100,6 +101,7 @@ body {
 		&:active {
 			background-color: darkgreen;
 			color: white;
+
 		}
 
 		&:focus {

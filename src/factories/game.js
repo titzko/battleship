@@ -89,12 +89,17 @@ let gameFactory = () => {
 		const self = this;
 		document.getElementById("computer-board").addEventListener("drop", function (e) {
 			const cell = handleDropEvent(e);
+			console.log(cell);
+			if(!cell) {
+				// todo -> make this more pretty -> create dom method
+				alert("ship cant be placed here")
+				return;
+			}
 			placeShipOnDrop.call(self, cell, ships);
 		});
 	};
 
 	const startGame = function () {
-		this._dom.updateLabel(`Attack the enemy now ${this._player.displayName}!`);
 		this._dom.changeBoardState();
 		const cells = [...document.querySelectorAll(`[data-user*="player"]`)];
 		const self = this;
@@ -121,7 +126,6 @@ let gameFactory = () => {
 			: (valid = data.amount + Number(target.dataset.y - adjustment) <= GAME_DIMENSION);
 
 		if (!valid) {
-			document.getElementById("computer-board").addEventListener("click", stopClickPropagation, true);
 			return;
 		}
 
