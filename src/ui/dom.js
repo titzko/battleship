@@ -21,7 +21,6 @@ const dom = () => {
 		const playerBoard = renderBoard("player-board", "Enemy Board", "player");
 		const computerBoard = renderBoard("computer-board", "Your Board", "computer");
 		computerBoard.addEventListener("dragover", handleDragableEvent);
-		computerBoard.addEventListener("drop", handleDropEvent);
 
 		pageWrapper.appendChild(playerBoard);
 		pageWrapper.appendChild(computerBoard);
@@ -30,55 +29,13 @@ const dom = () => {
 		btn.innerHTML = "change Direction";
 		btn.classList.add("btn");
 		btn.addEventListener("click", changePlacementDirection);
+		document.getElementById("computer-board").classList.add("active-border");
 
 		this.footer = createElement("div", "footer");
-
-		// dirty solution, which handles the problem that a cell has to be clicked for a ship placement to happen
-		// however, for the user, i dont want him to click a cell on the board and then a ship gets placed
-		// i want him to drag a ship
-		// so i add this event listener, which basically just prevents the eventlistener from cell-click to execute
-		// should refactor the code, such that its not a cell click but the drop event itself, whcih places a ship
-		// right now, dragstart removes this eventlistener, and here in drop event, the listner gets added again
-		// the drop event itself just triggers a cell click
-		document.getElementById("computer-board").addEventListener("click", stopClickPropagation, true);
 	};
-
-	function stopClickPropagation(e) {
-		e.stopPropagation();
-	}
 
 	const handleDragableEvent = (event) => {
 		event.preventDefault();
-	};
-
-	const removeDirectionButton = () => {
-		document.getElementById("direction-btn").remove();
-	};
-
-	const handleDropEvent = (event) => {
-		event.preventDefault();
-		const data = JSON.parse(event.dataTransfer.getData("text/plain"));
-		const target = event.target;
-		target.dataset.direction = data.direction;
-
-		const adjustment = data.cellPos;
-		const y = target.dataset.y - adjustment;
-		const x = target.dataset.x;
-
-		let valid = false;
-		data.direction === "x"
-			? (valid = data.amount + Number(target.dataset.x) <= GAME_DIMENSION)
-			: (valid = data.amount + Number(target.dataset.y - adjustment) <= GAME_DIMENSION);
-
-		if (!valid) {
-			document.getElementById("computer-board").addEventListener("click", stopClickPropagation, true);
-			return;
-		}
-
-		const adjustedCell = document.querySelector(`.cell[data-user="computer"][data-y="${y}"][data-x="${x}"]`);
-
-		data.direction === "x" ? event.target.click() : adjustedCell.click();
-		document.getElementById("computer-board").addEventListener("click", stopClickPropagation, true);
 	};
 
 	const renderBoard = (id, labelText, user) => {
@@ -133,7 +90,6 @@ const dom = () => {
 	}
 
 	const handleDragStart = (event, ship) => {
-		document.getElementById("computer-board").removeEventListener("click", stopClickPropagation, true);
 		const direction = event.target.dataset.direction;
 		const cellPos = event.target.dataset.dragedCellPosition;
 
@@ -159,6 +115,25 @@ const dom = () => {
 		this.footer.firstElementChild.remove();
 	}
 
+	function changeBoardState() {
+		document.getElementById("direction-btn").remove();
+		document.getElementById("computer-board").classList.remove("active-border");
+		document.getElementById("player-board").classList.add("active-border");
+
+		const playerCells = document.querySelectorAll('[data-user="player"]');
+		playerCells.forEach((cell) => {
+			cell.classList.add("active");
+		});
+
+		const computerCells = document.querySelectorAll('[data-user="computer"]');
+		computerCells.forEach((cell) => {
+			cell.classList.remove("active");
+		});
+
+		document.getElementById("player-board").style.cursor = "pointer";
+		document.getElementById("computer-board").style.cursor = "not-allowed";
+	}
+
 	return {
 		initPage,
 		initShipPlacements,
@@ -167,7 +142,7 @@ const dom = () => {
 		shipsToPlace,
 		removePlacementShip,
 		updateLabel,
-		removeDirectionButton,
+		changeBoardState,
 	};
 };
 

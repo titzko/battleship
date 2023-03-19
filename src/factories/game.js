@@ -35,7 +35,6 @@ let gameFactory = () => {
 		this.computer.placeShipsRandomlyOnBoard(board1);
 		// alternative of using call would be to export the function and then -> this.startShipPlacementPhase()
 		startShipPlacementPhase.call(this);
-		console.log(this._player);
 	};
 
 	const createUser = function (name, board, isComputer = false, displayName = "Computer") {
@@ -65,7 +64,7 @@ let gameFactory = () => {
 		}
 	};
 
-	const placeShipOnClick = function (cell, ships) {
+	const placeShipOnDrop = function (cell, ships) {
 		if (ships.length === 0) {
 			return;
 		}
@@ -86,33 +85,17 @@ let gameFactory = () => {
 	const startShipPlacementPhase = function () {
 		const ships = SHIP_DIMENSIONS();
 		this._dom.initShipPlacements(ships);
-		const computerCells = document.querySelectorAll('[data-user="computer"]');
-		computerCells.forEach((cell) => {
-			cell.addEventListener("click", () => {
-				placeShipOnClick.call(this, cell, ships);
-			});
-		});
-	};
 
-	const changeBoardState = () => {
-		const playerCells = document.querySelectorAll('[data-user="player"]');
-		playerCells.forEach((cell) => {
-			cell.classList.add("active");
+		const self = this;
+		document.getElementById("computer-board").addEventListener("drop", function (e) {
+			const cell = handleDropEvent(e);
+			placeShipOnDrop.call(self, cell, ships);
 		});
-
-		const computerCells = document.querySelectorAll('[data-user="computer"]');
-		computerCells.forEach((cell) => {
-			cell.classList.remove("active");
-		});
-
-		document.getElementById("player-board").style.cursor = "pointer";
-		document.getElementById("computer-board").style.cursor = "not-allowed";
 	};
 
 	const startGame = function () {
 		this._dom.updateLabel(`Attack the enemy now ${this._player.displayName}!`);
-		this._dom.removeDirectionButton();
-		changeBoardState();
+		this._dom.changeBoardState();
 		const cells = [...document.querySelectorAll(`[data-user*="player"]`)];
 		const self = this;
 		cells.map((cell) => {
@@ -120,6 +103,31 @@ let gameFactory = () => {
 				handleCellClick.call(self, event);
 			});
 		});
+	};
+
+	const handleDropEvent = (event) => {
+		event.preventDefault();
+		const data = JSON.parse(event.dataTransfer.getData("text/plain"));
+		const target = event.target;
+		target.dataset.direction = data.direction;
+
+		const adjustment = data.cellPos;
+		const y = target.dataset.y - adjustment;
+		const x = target.dataset.x;
+
+		let valid = false;
+		data.direction === "x"
+			? (valid = data.amount + Number(target.dataset.x) <= GAME_DIMENSION)
+			: (valid = data.amount + Number(target.dataset.y - adjustment) <= GAME_DIMENSION);
+
+		if (!valid) {
+			document.getElementById("computer-board").addEventListener("click", stopClickPropagation, true);
+			return;
+		}
+
+		const adjustedCell = document.querySelector(`.cell[data-user="computer"][data-y="${y}"][data-x="${x}"]`);
+
+		return data.direction === "x" ? event.target : adjustedCell;
 	};
 
 	return { _player, computer, init };
