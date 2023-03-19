@@ -29,16 +29,13 @@ const dom = () => {
 		btn.innerHTML = "change Direction";
 		btn.classList.add("btn");
 		btn.addEventListener("click", changePlacementDirection);
+		document.getElementById("computer-board").classList.add("active-border");
 
 		this.footer = createElement("div", "footer");
 	};
 
 	const handleDragableEvent = (event) => {
 		event.preventDefault();
-	};
-
-	const removeDirectionButton = () => {
-		document.getElementById("direction-btn").remove();
 	};
 
 	const renderBoard = (id, labelText, user) => {
@@ -118,6 +115,25 @@ const dom = () => {
 		this.footer.firstElementChild.remove();
 	}
 
+	function changeBoardState() {
+		document.getElementById("direction-btn").remove();
+		document.getElementById("computer-board").classList.remove("active-border");
+		document.getElementById("player-board").classList.add("active-border");
+
+		const playerCells = document.querySelectorAll('[data-user="player"]');
+		playerCells.forEach((cell) => {
+			cell.classList.add("active");
+		});
+
+		const computerCells = document.querySelectorAll('[data-user="computer"]');
+		computerCells.forEach((cell) => {
+			cell.classList.remove("active");
+		});
+
+		document.getElementById("player-board").style.cursor = "pointer";
+		document.getElementById("computer-board").style.cursor = "not-allowed";
+	}
+
 	return {
 		initPage,
 		initShipPlacements,
@@ -126,7 +142,7 @@ const dom = () => {
 		shipsToPlace,
 		removePlacementShip,
 		updateLabel,
-		removeDirectionButton,
+		changeBoardState,
 	};
 };
 

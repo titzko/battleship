@@ -93,26 +93,9 @@ let gameFactory = () => {
 		});
 	};
 
-	const changeBoardState = () => {
-		const playerCells = document.querySelectorAll('[data-user="player"]');
-		playerCells.forEach((cell) => {
-			cell.classList.add("active");
-		});
-
-		const computerCells = document.querySelectorAll('[data-user="computer"]');
-		computerCells.forEach((cell) => {
-			cell.classList.remove("active");
-		});
-
-		document.getElementById("player-board").style.cursor = "pointer";
-		document.getElementById("computer-board").style.cursor = "not-allowed";
-	};
-
 	const startGame = function () {
 		this._dom.updateLabel(`Attack the enemy now ${this._player.displayName}!`);
-		this._dom.removeDirectionButton();
-		// TODO -> this should be a dom method
-		changeBoardState();
+		this._dom.changeBoardState();
 		const cells = [...document.querySelectorAll(`[data-user*="player"]`)];
 		const self = this;
 		cells.map((cell) => {

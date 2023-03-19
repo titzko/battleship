@@ -10,11 +10,13 @@ body {
 	color: darken(#ccc, 50%);
 
 	#headline {
-		color: green;
+		color: blue;
 	}
 
-	.active:hover {
-		background-color: darken($color: #fff, $amount: 50%);
+	.active {
+		&:hover {
+			background-color: darken($color: #fff, $amount: 50%);
+		}
 	}
 
 	.container {
@@ -41,8 +43,11 @@ body {
 		}
 
 		.board-label {
+			margin-top: 8px;
 			display: flex;
 			justify-content: center;
+			font-size: x-large;
+			font-weight: 600;
 		}
 	}
 
@@ -100,5 +105,10 @@ body {
 		&:focus {
 			outline: none;
 		}
+	}
+
+	.active-border {
+		box-shadow: 0 0 10px blue;
+		border: 2px solid blue;
 	}
 }
