@@ -3,13 +3,13 @@
 	"version": "1.0.0",
 	"description": "",
 	"private": true,
-	"homepage": "http://titzko.github.io/battleship",
+	"homepage": "https://titzko.github.io/battleship",
 	"scripts": {
 		"test": "jest",
 		"build": "webpack",
 		"start": "webpack serve --open",
 		"predeploy": "npm run build",
-		"deploy": "gh-pages -d build"
+		"deploy": "gh-pages -d dist"
 	},
 	"keywords": [],
 	"author": "",
