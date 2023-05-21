@@ -65,7 +65,7 @@ let gameFactory = () => {
 	};
 
 	const placeShipOnDrop = function (cell, ships) {
-		if (ships.length === 0) {
+		if (ships.length == 0) {
 			return;
 		}
 		let x = cell.dataset.x;
@@ -77,6 +77,8 @@ let gameFactory = () => {
 		this._player.placeShip(position(Number(y), Number(x)), ship, direction, this.computer.board);
 		if (ships.length === 0) {
 			startGame.call(this);
+			this._dom.updateLabel(`Go ahead and destroy the enemy ships now. May god be with you`);
+
 		}
 
 		this._dom.removePlacementShip();
